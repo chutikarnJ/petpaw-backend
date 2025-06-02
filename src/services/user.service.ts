@@ -12,13 +12,6 @@ export const userService = {
     if (!userInfo) return new Response("User not found", { status: 400 });
     return userInfo;
   },
-  getAllUser: async () => {
-    const users = await prisma.user.findMany({
-      where: { status: "ACTIVE" },
-      select: { id: true, email: true, username: true, role: true },
-    });
-    return users;
-  },
   deleteUser: async ({ id }: { id: string }) => {
     await prisma.user.update({
       where: { id },

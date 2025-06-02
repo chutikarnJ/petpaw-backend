@@ -1,77 +1,54 @@
 import { Elysia } from "elysia";
 import { adminService } from "../services/admin.service";
+import { orderService } from "../services/order.service";
 import { signupSchema } from "../interfaces/user.interface";
 
-export const adminRoute = new Elysia()
-  .group("/auth", (app) =>
-    app
-      .post(
-        "/signup",
-        async ({ body }) => {
-          try {
-            const result = await authService.signupUser(body);
+export const adminRoute = new Elysia().group("/admin", (app) =>
+  app
+    .post(
+      "/signup",
+      async ({ body }) => {
+        try {
+          const result = await adminService.signupAdmin(body);
+          return result;
+        } catch (error) {
+          console.log(error);
+          return error;
+        }
+      },
+      {
+        body: signupSchema,
+      }
+    )
+    .get("/dashboard", async () => {
+        try {
+            const result = await adminService.getDashboardData();
             return result;
-          } catch (error) {
+        } catch (error) {
             console.log(error);
             return error;
-          }
-        },
-        {
-          body: signupSchema,
         }
-      )
-      .post(
-        "/admin",
-        async ({ body }) => {
-          try {
-            const result = await authService.signupAdmin(body);
-            return result;
-          } catch (error) {
-            console.log(error);
-            return error;
-          }
-        },
-        {
-          body: signupSchema,
-        }
-      )
-      .post(
-        "/signin",
-        async ({
-          body,
-          jwt,
-          cookie,
-        }: {
-          body: { email: string; password: string };
-          jwt: any;
-          cookie: any;
-        }) => {
-          try {
-            const result = await authService.signinUser({ body });
-            const token = await jwt.sign({
-              id: result.id,
-              role: result.role,
-              username: result.username,
-            });
-            cookie.access_token.set({
-              value: token,
-              httpOnly: true,
-              maxAge: 60 * 60 * 24 * 7,
-              path: "/",
-            });
+    })
+    .get("/user", async () => {
+      try {
+        const result = await adminService.getAllUser();
+        return result;
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    })
+    .get("/order", async ({ query }: any) => {
+      try {
+        const page = Number(query.page) || 1;
+        const limit = Number(query.limit) || 10;
+        const skip = (page - 1) * limit;
 
-            return {
-              message: "Login Successfully",
-              // token: cookie.access_token,
-            };
-          } catch (error) {
-            console.log(error);
-            return error;
-          }
-        }
-      )
-      .post("/logout", async ({ cookie }) => {
-        cookie.access_token.remove();
-        return { message: "Logged out" };
-      })
-  );
+        const result = await adminService.getAllOrders({ query, skip, limit });
+        return result;
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    })
+);

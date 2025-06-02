@@ -8,6 +8,7 @@ import { productRoute } from "./routes/product.route";
 import { cartRoute } from "./routes/cart.route";
 import staticPlugin from "@elysiajs/static";
 import { orderRoute } from "./routes/order.route";
+import { adminRoute } from "./routes/admin.route";
 
 const app = new Elysia()
   .use(
@@ -28,6 +29,7 @@ const app = new Elysia()
     })
   )
   .use(authRoute)
+  .use(adminRoute)
   .use(userRoute)
   .use(productRoute)
   .use(cartRoute)

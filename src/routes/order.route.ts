@@ -33,17 +33,5 @@ export const orderRoute = new Elysia().group("/order", (app) =>
         return error;
       }
     })
-    .get("/admin", async ({ query }: any) => {
-      try {
-        const page = Number(query.page) || 1;
-        const limit = Number(query.limit) || 10;
-        const skip = (page - 1) * limit;
-
-        const result = await orderService.getAllOrders({ query, skip, limit });
-        return result;
-      } catch (error) {
-        console.log(error);
-        return error;
-      }
-    })
+    
 );

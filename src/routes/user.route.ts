@@ -19,15 +19,7 @@ export const userRoute = new Elysia().group(
           return error;
         }
       })
-      .get("/list", async () => {
-        try {
-          const result = await userService.getAllUser();
-          return result;
-        } catch (error) {
-          console.log(error);
-          return error;
-        }
-      })
+     
 
   // .put("/delete/:id", authController.deleteUser)
 );
