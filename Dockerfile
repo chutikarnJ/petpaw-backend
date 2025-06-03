@@ -6,7 +6,7 @@ WORKDIR /app
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
-COPY prisma ./prisma # Copy your prisma directory containing schema.prisma
+COPY prisma ./prisma
 RUN bun prisma generate 
 
 COPY . .
