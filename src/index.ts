@@ -13,8 +13,21 @@ import { adminRoute } from "./routes/admin.route";
 const app = new Elysia()
   .use(
     cors({
-      origin: "http://localhost:5173",
-      credentials: true,
+      origin: (request) => {
+        const requestOrigin = request.headers.get("origin");
+
+        const allowedOrigins = [
+          "http://localhost:5173", 
+          "https://vercel.com/chutikarns-projects/petpaw-frontend/4KcyuFnYWmGes9eZGVJUKUcEKtgi",
+          // Add any other Vercel preview domains if you use them, e.g.:
+          // "https://your-project-git-branch-name-your-team.vercel.app",
+        ];
+
+        // Return true if the request origin is in our allowed list, otherwise false
+        return !!(requestOrigin && allowedOrigins.includes(requestOrigin));
+      },
+      credentials: true, 
+      methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     })
   )
   .use(cookie())
@@ -25,7 +38,7 @@ const app = new Elysia()
       exp: "7d",
       cookie: {
         name: "access_token",
-      }
+      },
     })
   )
   .use(authRoute)
@@ -36,8 +49,8 @@ const app = new Elysia()
   .use(orderRoute)
   .use(
     staticPlugin({
-      prefix: '/public/uploads',
-      assets: './public/uploads',
+      prefix: "/public/uploads",
+      assets: "./public/uploads",
     })
   )
   .listen(3001);
