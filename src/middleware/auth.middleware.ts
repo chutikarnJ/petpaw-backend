@@ -7,6 +7,9 @@ export const authMiddleware = () =>
       JwtPlugin({
         name: 'jwt',
         secret: Bun.env.JWT_SECRET!,
+        cookie: {
+          name: "access_token"
+        }
       })
     )
     
