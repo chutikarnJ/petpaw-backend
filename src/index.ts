@@ -18,7 +18,7 @@ const app = new Elysia()
 
         const allowedOrigins = [
           "http://localhost:5173", 
-          "https://vercel.com/chutikarns-projects/petpaw-frontend/4KcyuFnYWmGes9eZGVJUKUcEKtgi",
+          "https://petpaw-frontend-gwno456r3-chutikarns-projects.vercel.app",
           // Add any other Vercel preview domains if you use them, e.g.:
           // "https://your-project-git-branch-name-your-team.vercel.app",
         ];
