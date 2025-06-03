@@ -2,18 +2,18 @@ import { Elysia } from "elysia";
 import { jwt as JwtPlugin } from "@elysiajs/jwt";
 
 export const authMiddleware = () =>
-  new Elysia({name: "authMiddleware"})
+  new Elysia({ name: "authMiddleware" })
     .use(
       JwtPlugin({
-        name: 'jwt',
+        name: "jwt",
         secret: Bun.env.JWT_SECRET!,
         cookie: {
-          name: "access_token"
-        }
+          name: "access_token",
+        },
       })
     )
-    
-    .derive({as: 'scoped'}, async ({ jwt, cookie }) => {
+
+    .derive({ as: "scoped" }, async ({ jwt, cookie }) => {
       const token = cookie?.access_token?.value;
 
       if (!token) {
