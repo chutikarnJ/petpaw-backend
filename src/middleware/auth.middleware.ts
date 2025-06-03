@@ -15,7 +15,6 @@ export const authMiddleware = () =>
 
     .derive({ as: "scoped" }, async ({ jwt, cookie }) => {
       const token = cookie?.access_token?.value;
-      
 
       if (!token) {
         throw new Response("Unauthorized: Missing token", { status: 401 });
