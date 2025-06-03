@@ -72,7 +72,14 @@ export const authRoute = new Elysia().group("/auth", (app) =>
       }
     )
     .post("/logout", async (cookie: any) => {
-      cookie.access_token.remove();
+      cookie.access_token.set({
+        value: "",
+        httpOnly: true,
+        maxAge: 0, // 🔥 expire the cookie
+        path: "/",
+        sameSite: "None",
+        secure: true,
+      });
       return { message: "Logged out" };
     })
 );
