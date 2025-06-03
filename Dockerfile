@@ -3,8 +3,11 @@ FROM oven/bun:1
 
 WORKDIR /app
 
-COPY package.json bun.lock ./
+COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile
+
+COPY prisma ./prisma # Copy your prisma directory containing schema.prisma
+RUN bun prisma generate 
 
 COPY . .
 
