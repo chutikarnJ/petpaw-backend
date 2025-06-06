@@ -1,22 +1,33 @@
-import Elysia from "elysia";
+import Elysia, { t } from "elysia";
 import { productService } from "../services/product.service";
-import { productSchema } from "../interfaces/product.interface";
+
+export const queryCustom = t.Object({
+  page: t.Optional(t.Number()),
+  limit: t.Optional(t.Number()),
+  category: t.Optional(t.Array(t.String())),
+  petTypes: t.Optional(t.Array(t.String())),
+  maxPrice: t.Optional(t.Number()),
+  minPrice: t.Optional(t.Number()),
+  search: t.Optional(t.String()),
+});
 
 export const productRoute = new Elysia().group("/product", (app) =>
   app
-    .get("/", async ({query}) => {
-      try {
-        const page = Number(query.page) || 1;
-        const limit = Number(query.limit) || 10;
-        const skip = (page - 1) * limit;
-
-        const result = await productService.getAllProducts({skip, limit});
-        return result;
-      } catch (error) {
-        console.log(error);
-        return error;
+    .get(
+      "/",
+      async ({ query }) => {
+        try {
+          const result = await productService.getAllProducts(query);
+          return result;
+        } catch (error) {
+          console.log(error);
+          return error;
+        }
+      },
+      {
+        query: queryCustom,
       }
-    })
+    )
     .get("/:id", async ({ params }) => {
       try {
         const result = await productService.getProductById(params.id);

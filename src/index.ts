@@ -18,13 +18,10 @@ const app = new Elysia()
 
         const allowedOrigins = [
           "http://localhost:5173", 
+          "http://localhost:5174", 
           "https://petpaw-frontend-gwno456r3-chutikarns-projects.vercel.app/",
           "https://petpaw-frontend.vercel.app"
-          // Add any other Vercel preview domains if you use them, e.g.:
-          // "https://your-project-git-branch-name-your-team.vercel.app",
         ];
-
-        // Return true if the request origin is in our allowed list, otherwise false
         return !!(requestOrigin && allowedOrigins.includes(requestOrigin));
       },
       credentials: true, 
@@ -54,7 +51,7 @@ const app = new Elysia()
       assets: "./public/uploads",
     })
   )
-  .listen(3001);
+  .listen(3000);
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`

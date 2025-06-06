@@ -2,17 +2,62 @@ import { PrismaClient } from "@prisma/client";
 import { ProductSchema } from "../interfaces/product.interface";
 import fs from "fs/promises";
 
+import { queryCustom } from "../routes/product.route";
+
+type queryCustom = typeof queryCustom.static;
 const prisma = new PrismaClient();
 
 export const productService = {
-  getAllProducts: async ({ skip, limit }: any) => {
+  getAllProducts: async (query: queryCustom) => {
+    const page = Number(query.page) || 1;
+    const limit = Number(query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const whereClause: any = {};
+
+    if (query.category && Array.isArray(query.category)) {
+      whereClause.category = {
+        in: query.category,
+      };
+    }
+
+    if (query.petTypes && Array.isArray(query.petTypes)) {
+      whereClause.petTypes = {
+        hasSome: query.petTypes,
+      };
+    }
+    if (query.maxPrice || query.minPrice) {
+      whereClause.price = {
+        lte: Number(query.maxPrice),
+        gte: Number(query.minPrice),
+      };
+    }
+    if (query.search) {
+      whereClause.OR = [
+        {
+          name: {
+            contains: query.search,
+            mode: "insensitive",
+          },
+        },
+        {
+          brand: {
+            contains: query.search,
+            mode: "insensitive",
+          },
+        },
+      ];
+    }
     const [products, total] = await Promise.all([
       prisma.product.findMany({
         skip,
         take: limit,
+        where: whereClause,
         orderBy: { createdAt: "desc" },
       }),
-      prisma.product.count(),
+      prisma.product.count({
+        where: whereClause,
+      }),
     ]);
     return {
       data: products,
